@@ -2,6 +2,8 @@
 
 import streamlit as st
 from server import conexionbd
+#pip install streamlit-option-menu
+from streamlit_option_menu import option_menu
 
 def registro_colaborador():
     st.subheader("Registro de Colaborador")
@@ -30,14 +32,27 @@ def inicio_sesion_colaborador():
     return False, None  # Devuelve el estado no autenticado
 
 def colaborador_page(usuario):
-    st.write(f"Bienvenido, {usuario} (Colaborador)")
+    st.sidebar.title(f"Bienvenido, {usuario} (Colaborador)")
+    st.title(f"Bienvenido, {usuario} (Colaborador)")
 
     st.subheader("Menú de Colaborador")
-    opcion = st.selectbox("Selecciona una funcionalidad:", ["Funcionalidad A", "Funcionalidad B", "Funcionalidad C"])
-    
-    if opcion == "Funcionalidad A":
-        st.write("Has seleccionado Funcionalidad A. ¡Realiza las acciones correspondientes aquí!")
-    elif opcion == "Funcionalidad B":
-        st.write("Has seleccionado Funcionalidad B. ¡Realiza las acciones correspondientes aquí!")
-    elif opcion == "Funcionalidad C":
-        st.write("Has seleccionado Funcionalidad C. ¡Realiza las acciones correspondientes aquí!")
+
+
+    selected=option_menu(
+        menu_title="Menú de Colaborador",
+        options=["Registro de una solicitud de viaje", "Modificar una solicitud", "Eliminar una solicitud", "Ver historial de solicitudes"],
+        orientation="horizontal",
+    )
+    if selected=="Registro de una solicitud de viaje":
+        st.write("Has seleccionado Funcionalidad 1. ¡Realiza las acciones correspondientes aquí!")
+    if selected=="Modificar una solicitud":
+        st.write("Has seleccionado Funcionalidad 2. ¡Realiza las acciones correspondientes aquí!")
+    if selected=="Eliminar una solicitud":
+         st.write("Has seleccionado Funcionalidad 2. ¡Realiza las acciones correspondientes aquí!")
+    if selected=="Ver historial de solicitudes":
+        st.write("Has seleccionado Funcionalidad 3. ¡Realiza las acciones correspondientes aquí!")
+    # "Logout" 
+    if st.button("Logout"):
+        # Reset the authentication state
+        st.session_state.authenticated = False
+        st.experimental_rerun()
