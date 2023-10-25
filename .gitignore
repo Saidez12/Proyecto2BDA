@@ -1,0 +1,11 @@
+
+.DS_Store
+.vs/slnx.sqlite
+.vs/v_1_1/FileContentIndex/b86d91ab-2e19-450a-89c7-042f1fb77104.vsidx
+.vs/v_1_1/v17/.wsuo
+.vs/VSWorkspaceState.json
+modulos/__pycache__/viajesInternacionales.cpython-310.pyc
+modulos/__pycache__/admin.cpython-310.pyc
+modulos/__pycache__/colaborador.cpython-310.pyc
+modulos/__pycache__/consultas.cpython-310.pyc
+server/__pycache__/conexionbd.cpython-310.pyc

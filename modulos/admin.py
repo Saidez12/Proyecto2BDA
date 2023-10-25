@@ -2,6 +2,9 @@
 
 import streamlit as st
 from server import conexionbd
+from modulos import consultas
+#pip install streamlit-option-menu
+from streamlit_option_menu import option_menu
 
 def registro_admin():
     st.subheader("Registro de Administrador")
@@ -14,6 +17,7 @@ def registro_admin():
             st.success("Registro de administrador exitoso. Puedes iniciar sesión ahora.")
         else:
             st.error("El administrador ya existe. Por favor, inicie sesión.")
+
 
 def inicio_sesion_admin():
     st.subheader("Inicio de Sesión de Administrador")
@@ -29,15 +33,29 @@ def inicio_sesion_admin():
             st.error("Credenciales incorrectas. Por favor, inténtalo de nuevo.")
     return False, None  # Devuelve el estado no autenticado
 
+
 def admin_page(usuario):
-    st.write(f"Bienvenido, {usuario} (Admin)")
+    st.sidebar.title(f"Bienvenido, {usuario} (Admin)")
+    st.title(f"Bienvenido, {usuario} (Admin)")
 
     st.subheader("Menú de Administrador")
-    opcion = st.selectbox("Selecciona una funcionalidad:", ["Funcionalidad 1", "Funcionalidad 2", "Funcionalidad 3"])
-    
-    if opcion == "Funcionalidad 1":
+
+
+    selected=option_menu(
+        menu_title="Menú de Administrador",
+        options=["Valorar solicitud", "Consultar viajes programados", "Consultar viajes internacionales", "Consultar por destino específico"],
+        orientation="horizontal",
+    )
+    if selected=="Valorar solicitud":
         st.write("Has seleccionado Funcionalidad 1. ¡Realiza las acciones correspondientes aquí!")
-    elif opcion == "Funcionalidad 2":
+    if selected=="Consultar viajes programados":
         st.write("Has seleccionado Funcionalidad 2. ¡Realiza las acciones correspondientes aquí!")
-    elif opcion == "Funcionalidad 3":
-        st.write("Has seleccionado Funcionalidad 3. ¡Realiza las acciones correspondientes aquí!")
+    if selected=="Consultar viajes internacionales":
+        consultas.consultar_viajes_internacionales()
+    if selected=="Consultar por destino específico":
+        consultas.consultar_por_destino()
+    # "Logout" 
+    if st.button("Logout"):
+        # Reset the authentication state
+        st.session_state.authenticated = False
+        st.experimental_rerun()
