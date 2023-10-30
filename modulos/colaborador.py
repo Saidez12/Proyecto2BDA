@@ -4,6 +4,7 @@ import streamlit as st
 from server import conexionbd
 #pip install streamlit-option-menu
 from streamlit_option_menu import option_menu
+from modulos import crudSolicitudes
 
 def registro_colaborador():
     st.subheader("Registro de Colaborador")
@@ -50,7 +51,7 @@ def colaborador_page(usuario):
     if selected=="Eliminar una solicitud":
          st.write("Has seleccionado Funcionalidad 2. ¡Realiza las acciones correspondientes aquí!")
     if selected=="Ver historial de solicitudes":
-        st.write("Has seleccionado Funcionalidad 3. ¡Realiza las acciones correspondientes aquí!")
+        crudSolicitudes.mostrar_solicitudes(usuario)
     # "Logout" 
     if st.button("Logout"):
         # Reset the authentication state
