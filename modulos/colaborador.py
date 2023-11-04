@@ -48,6 +48,7 @@ def colaborador_page(usuario):
         st.write("Has seleccionado Funcionalidad 1. ¡Realiza las acciones correspondientes aquí!")
     if selected=="Modificar una solicitud":
         st.write("Has seleccionado Funcionalidad 2. ¡Realiza las acciones correspondientes aquí!")
+        crudSolicitudes.editar_solicitud(usuario)
     if selected=="Eliminar una solicitud":
          st.write("Has seleccionado Funcionalidad 2. ¡Realiza las acciones correspondientes aquí!")
     if selected=="Ver historial de solicitudes":

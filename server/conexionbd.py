@@ -3,7 +3,7 @@ import math
 
 # Configurar la conexión a CouchDB
 def conectar_a_couchdb():
-    server = couchdb.Server('http://admin:admin@localhost:5984/')
+    server = couchdb.Server('http://admin:ariel@localhost:5984/')
     return server['viajes_corporativos']
 
 # Función para registrar un colaborador
