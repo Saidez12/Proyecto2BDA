@@ -64,3 +64,26 @@ def editar_solicitud(usuario):
                 st.error("No se pudo actualizar la solicitud.")
     else:
         st.warning("Selecciona un ID válido de solicitud")
+def eliminarSolicitud(usuario):
+    solicitudes = conexionbd.solicitudes_colaborador(usuario)
+    listaId = [solicitud['identificador'] for solicitud in solicitudes]
+    
+    # Agregar un widget selectbox para que el usuario seleccione un ID
+    idSeleccionado = st.selectbox("Selecciona un ID de Solicitud", listaId)
+    eliminar_button = st.button("Eliminar")
+    
+    # Buscar la solicitud seleccionada por ID
+    solicitud_seleccionada = None
+    for solicitud in solicitudes:
+        if solicitud['identificador'] == idSeleccionado:
+            solicitud_seleccionada = solicitud
+    
+    if solicitud_seleccionada:
+        if eliminar_button:
+
+            if solcitudesCrudServer.eliminar_solicitud(usuario, idSeleccionado):
+                st.success("Solicitud eliminada con éxito.")
+            else:
+                st.error("No se pudo eliminar la solicitud.")
+    else:
+        st.warning("Selecciona un ID válido de solicitud")

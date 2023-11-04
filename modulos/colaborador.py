@@ -51,6 +51,7 @@ def colaborador_page(usuario):
         crudSolicitudes.editar_solicitud(usuario)
     if selected=="Eliminar una solicitud":
          st.write("Has seleccionado Funcionalidad 2. ¡Realiza las acciones correspondientes aquí!")
+         crudSolicitudes.eliminarSolicitud(usuario)
     if selected=="Ver historial de solicitudes":
         crudSolicitudes.mostrar_solicitudes(usuario)
     # "Logout" 
