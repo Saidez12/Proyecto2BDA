@@ -2,7 +2,7 @@
 
 import streamlit as st
 from server import conexionbd
-from modulos import consultas
+from modulos import consultas,aprobarSolicitud
 #pip install streamlit-option-menu
 from streamlit_option_menu import option_menu
 
@@ -47,7 +47,8 @@ def admin_page(usuario):
         orientation="horizontal",
     )
     if selected=="Valorar solicitud":
-        st.write("Has seleccionado Funcionalidad 1. ¡Realiza las acciones correspondientes aquí!")
+        aprobarSolicitud.mostrar_solicitudesPendientes()
+        aprobarSolicitud.cambiar_estadoSolicitud()
     if selected=="Consultar viajes programados":
         st.write("Has seleccionado Funcionalidad 2. ¡Realiza las acciones correspondientes aquí!")
     if selected=="Consultar viajes internacionales":

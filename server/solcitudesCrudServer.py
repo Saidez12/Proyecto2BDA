@@ -60,3 +60,38 @@ def eliminar_solicitud(usuario, solicitud_id):
                 return True
 
     return False  # No se encontró la solicitud o no tiene permiso para eliminarla
+
+def mostrar_solicitudes_Pendientes():
+    db = conexionbd.conectar_a_couchdb()
+
+    db_solicitudes = db.get("solicitudes")
+
+    if db_solicitudes:
+        solicitudes_registradas = db_solicitudes.get("solicitudes", [])
+        listaSolicitudes = []
+
+        for solicitud in solicitudes_registradas:
+            if "pendiente" == solicitud.get("estado"):
+                listaSolicitudes.append(solicitud)
+            
+        return listaSolicitudes
+    else:
+        return []
+def cambiar_estadoSolicitud(id_solicitud):
+    db = conexionbd.conectar_a_couchdb()
+    solicitudes = db.get("solicitudes")  # Obtén el documento de solicitudes
+
+    if solicitudes:
+        solicitudes_registradas = solicitudes.get('solicitudes', [])
+
+        for solicitud in solicitudes_registradas:
+            if solicitud.get('identificador') == id_solicitud:
+                # Actualiza el estado de la solicitud a "aceptada"
+                solicitud['estado'] = "aceptada"
+
+                # Actualiza la solicitud en la lista
+                db['solicitudes'] = solicitudes
+                return True
+
+    return False  # No se encontró la solicitud o no tiene permiso para actualizarla
+
