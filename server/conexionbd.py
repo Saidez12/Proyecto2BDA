@@ -3,7 +3,7 @@ import math
 
 # Configurar la conexión a CouchDB
 def conectar_a_couchdb():
-    server = couchdb.Server('http://admin:ariel@localhost:5984/')
+    server = couchdb.Server('http://admin:admin@localhost:5984/')
     return server['viajes_corporativos']
 
 # Función para registrar un colaborador
@@ -178,3 +178,33 @@ def solicitudes_colaborador(correoColaborador):
             return []
     else:
         return []
+
+
+def viajes_programados(mes, año):
+    db = conectar_a_couchdb()
+    solicitudes = db.get("solicitudes")
+
+    if solicitudes:
+        viajes_programados = solicitudes.get('solicitudes', [])
+        viajes_filtrados = []
+
+        for viaje in viajes_programados:
+            fecha_inicio = viaje.get('fecha_inicio')
+            fecha_inicio = datetime.datetime.strptime(fecha_inicio, "%Y-%m-%d")
+
+            # Obtenemos el mes y el año de la fecha.
+            mes_viaje = fecha_inicio.month
+            año_viaje = fecha_inicio.year
+
+            if mes_viaje == mes and año_viaje == año and viaje.get('estado') == "aprobada":
+                departamento = viaje.get('departamento', 'Sin departamento')
+
+                viajes_filtrados.append({
+                    'nombre_completo_colaborador': viaje['nombre_completo_colaborador'],
+                    'departamento': departamento
+                })
+
+        return viajes_filtrados
+    else:
+        return []
+

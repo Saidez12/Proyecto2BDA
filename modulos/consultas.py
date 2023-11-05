@@ -2,6 +2,7 @@
 
 import streamlit as st
 from server import conexionbd
+from datetime import datetime
 
 def consultar_por_destino():
     st.write("Consultar Viajes por Destino Específico")
@@ -44,4 +45,38 @@ def consultar_viajes_internacionales():
                 destino_pais = viaje['pais_destino']
                 st.write(f"Colaborador(a): {colaborador_nombre}")
                 st.write(f"País de Destino: {destino_pais}")
+                st.write("---")
+
+def consultar_viajes_programados():
+    st.write("Consultar Viajes Programados por Mes y Año")
+    
+    # Lista de nombres de los meses
+    nombres_meses = [
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
+        "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ]
+
+    # Obtener el año actual
+    año_actual = datetime.now().year
+
+    # Selección del mes
+    mes = st.selectbox("Selecciona el mes:", nombres_meses)
+
+    # Selección del año con rango desde 1950 hasta 2050
+    año = st.selectbox("Selecciona el año:", list(range(1950, 2051)))
+
+    consultar_button = st.button("Consultar")
+
+    if consultar_button:
+        viajes = conexionbd.viajes_programados(nombres_meses.index(mes) + 1, año)
+
+        if not viajes:
+            st.write("No se encontraron viajes programados para el mes y año seleccionados.")
+        else:
+            st.write("Resultados:")
+            for viaje in viajes:
+                colaborador_nombre = viaje['nombre_completo_colaborador']
+                departamento = viaje['departamento']
+                st.write(f"Colaborador(a): {colaborador_nombre}")
+                st.write(f"Departamento: {departamento}")
                 st.write("---")

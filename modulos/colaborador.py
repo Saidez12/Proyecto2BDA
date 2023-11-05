@@ -45,7 +45,7 @@ def colaborador_page(usuario):
         orientation="horizontal",
     )
     if selected=="Registro de una solicitud de viaje":
-        st.write("Has seleccionado Funcionalidad 1. ¡Realiza las acciones correspondientes aquí!")
+        crudSolicitudes.agregar_solicitudUI(usuario)
     if selected=="Modificar una solicitud":
         st.write("Has seleccionado Funcionalidad 2. ¡Realiza las acciones correspondientes aquí!")
         crudSolicitudes.editar_solicitud(usuario)

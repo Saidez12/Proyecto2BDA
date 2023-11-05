@@ -1,6 +1,39 @@
 
 from server import conexionbd
 
+def agregar_solicitud(usuario, datos):
+    db = conexionbd.conectar_a_couchdb()
+    colaboradores_doc = db.get("colaboradores")
+    nombreColaborador = None
+
+    if colaboradores_doc:
+        colaboradores_lista = colaboradores_doc.get("colaboradores", [])
+
+        for colaborador in colaboradores_lista:
+            if usuario == colaborador.get("correo_electronico"):
+                nombreColaborador = colaborador.get("nombre_completo", None)
+                break
+
+    solicitudes = db.get("solicitudes")
+    solicitudes_registradas = []
+
+    if solicitudes:
+        solicitudes_registradas = solicitudes.get('solicitudes', [])
+
+    nuevo_id = len(solicitudes_registradas) + 1
+
+    nueva_solicitud = {
+        "identificador": nuevo_id,
+        "nombre_completo_colaborador": nombreColaborador,
+        **datos
+    }
+
+    solicitudes_registradas.append(nueva_solicitud)
+    solicitudes["solicitudes"] = solicitudes_registradas
+
+    db.save(solicitudes)
+    return True
+
 
 # Función para actualizar una solicitud
 def actualizar_solicitud(usuario, solicitud_id, nuevos_datos):
@@ -71,12 +104,15 @@ def mostrar_solicitudes_Pendientes():
         listaSolicitudes = []
 
         for solicitud in solicitudes_registradas:
-            if "pendiente" == solicitud.get("estado"):
+            estado = solicitud.get("estado")
+            if estado and estado.lower() == "pendiente":
                 listaSolicitudes.append(solicitud)
             
         return listaSolicitudes
     else:
         return []
+
+    
 def cambiar_estadoSolicitud(id_solicitud):
     db = conexionbd.conectar_a_couchdb()
     solicitudes = db.get("solicitudes")  # Obtén el documento de solicitudes
@@ -87,7 +123,7 @@ def cambiar_estadoSolicitud(id_solicitud):
         for solicitud in solicitudes_registradas:
             if solicitud.get('identificador') == id_solicitud:
                 # Actualiza el estado de la solicitud a "aceptada"
-                solicitud['estado'] = "aceptada"
+                solicitud['estado'] = "aprobada"
 
                 # Actualiza la solicitud en la lista
                 db['solicitudes'] = solicitudes

@@ -1,9 +1,9 @@
 import streamlit as st
-from server import conexionbd,solcitudesCrudServer
+from server import conexionbd,solicitudesCrudServer
 
 def mostrar_solicitudesPendientes():
 
-    solicitudes=solcitudesCrudServer.mostrar_solicitudes_Pendientes()
+    solicitudes=solicitudesCrudServer.mostrar_solicitudes_Pendientes()
     st.title("Solicitudes Pendientes")
     consultar_button = st.button("Consultar")
 
@@ -12,6 +12,7 @@ def mostrar_solicitudesPendientes():
         # Itera sobre las solicitudes y muéstralas
         for solicitud in solicitudes:
             st.subheader(f"Solicitud de {solicitud['nombre_completo_colaborador']}")
+            st.write(f"Departamento: {solicitud['departamento']}")
             st.write(f"Destino: {solicitud['pais_destino']}")
             st.write(f"Motivo: {solicitud['motivo']}")
             st.write(f"Fecha de inicio: {solicitud['fecha_inicio']}")
@@ -21,7 +22,7 @@ def mostrar_solicitudesPendientes():
             st.write("---")
 
 def cambiar_estadoSolicitud():
-    solicitudes = solcitudesCrudServer.mostrar_solicitudes_Pendientes()
+    solicitudes = solicitudesCrudServer.mostrar_solicitudes_Pendientes()
     listaId = [solicitud['identificador'] for solicitud in solicitudes]
     
     # Agregar un widget selectbox para que el usuario seleccione un ID
@@ -35,7 +36,7 @@ def cambiar_estadoSolicitud():
     if solicitud_seleccionada:
         actualizar_button = st.button("Cambiar estado")
         if actualizar_button:
-            if solcitudesCrudServer.cambiar_estadoSolicitud( idSeleccionado):
+            if solicitudesCrudServer.cambiar_estadoSolicitud( idSeleccionado):
                 st.success("Estado de solicitud actualizado con éxito.")
             else:
                 st.error("No se pudo actualizar el estado de la solicitud.")

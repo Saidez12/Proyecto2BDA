@@ -50,7 +50,7 @@ def admin_page(usuario):
         aprobarSolicitud.mostrar_solicitudesPendientes()
         aprobarSolicitud.cambiar_estadoSolicitud()
     if selected=="Consultar viajes programados":
-        st.write("Has seleccionado Funcionalidad 2. ¡Realiza las acciones correspondientes aquí!")
+        consultas.consultar_viajes_programados()
     if selected=="Consultar viajes internacionales":
         consultas.consultar_viajes_internacionales()
     if selected=="Consultar por destino específico":
