@@ -1,18 +1,8 @@
 
 from server import conexionbd
 
-def agregar_solicitud(usuario, datos):
+def agregar_solicitud(datos):
     db = conexionbd.conectar_a_couchdb()
-    colaboradores_doc = db.get("colaboradores")
-    nombreColaborador = None
-
-    if colaboradores_doc:
-        colaboradores_lista = colaboradores_doc.get("colaboradores", [])
-
-        for colaborador in colaboradores_lista:
-            if usuario == colaborador.get("correo_electronico"):
-                nombreColaborador = colaborador.get("nombre_completo", None)
-                break
 
     solicitudes = db.get("solicitudes")
     solicitudes_registradas = []
@@ -24,7 +14,6 @@ def agregar_solicitud(usuario, datos):
 
     nueva_solicitud = {
         "identificador": nuevo_id,
-        "nombre_completo_colaborador": nombreColaborador,
         **datos
     }
 
