@@ -1,22 +1,18 @@
 import streamlit as st
 from server import conexionbd,solicitudesCrudServer
-import datetime
+
 
 def agregar_solicitudUI(usuario):
     st.title("Agregar Nueva Solicitud")
 
     nuevo_datos = {}
 
-    nuevo_datos['nombre_completo_colaborador'] = st.text_input("Nombre Completo del Colaborador")
-    nuevo_datos['departamento'] = st.text_input("Departamento")
+    nuevo_datos['nombre_completo_colaborador'] = st.text_input("Nombre Completo del Colaborador", key="nombre_completo")
+    nuevo_datos['correo'] = usuario
+    nuevo_datos['departamento'] = st.text_input("Departamento", key="departamento")
     nuevo_datos['internacional'] = st.checkbox("Internacional")
-
-    if nuevo_datos['internacional']:
-        nuevo_datos['pais_destino'] = st.text_input("País de Destino")
-    else:
-        nuevo_datos['pais_destino'] = st.text_input("Ciudad Local")
-
-    nuevo_datos['motivo'] = st.text_input("Motivo")
+    nuevo_datos['pais_destino'] = st.text_input("País de Destino" if nuevo_datos['internacional'] else "Ciudad Local", key="destino")
+    nuevo_datos['motivo'] = st.text_input("Motivo", key="motivo")
     fecha_inicio = st.date_input("Fecha de Inicio")
     fecha_finalizacion = st.date_input("Fecha de Finalización")
 
@@ -26,32 +22,57 @@ def agregar_solicitudUI(usuario):
     vuelo_index = 1  # Contador para generar claves únicas
 
     while True:
-        aerolinea = st.text_input(f"Aerolínea {vuelo_index}")
-        precio_boletos = st.number_input(f"Precio de Boletos {vuelo_index}")
+        aerolinea = st.text_input(f"Aerolínea {vuelo_index}", key=f"aerolinea_{vuelo_index}")
+        precio_boletos = st.number_input(f"Precio de Boletos en dólares {vuelo_index}", key=f"precio_{vuelo_index}")
+
+        # Validaciones de vuelos
+        if precio_boletos <= 0:
+            st.warning("El precio de los boletos debe ser un valor positivo.")
+            precio_boletos = 0  # Establecer el precio a 0 si es negativo
         nuevo_datos['vuelos'].append({"aerolinea": aerolinea, "precio_boletos": precio_boletos})
 
-        add_another = st.checkbox(f"Agregar otro vuelo ({vuelo_index})")  # Agregar un número único a la etiqueta del checkbox
+        add_another = st.checkbox(f"Agregar otro vuelo ({vuelo_index})", key=f"add_another_{vuelo_index}")  # Agregar un número único a la etiqueta del checkbox
 
         if not add_another:
             break
 
         vuelo_index += 1
 
-    nuevo_datos['alojamiento'] = st.text_input("Alojamiento")
+    nuevo_datos['alojamiento'] = st.text_input("Alojamiento", key="alojamiento")
     nuevo_datos['requiere_transporte'] = st.checkbox("Requiere Transporte")
 
-    agregar_button = st.button("Agregar Solicitud")
+    agregar_button = st.button("Agregar Solicitud", key="agregar_button")
 
     if agregar_button:
-        # Convierte las fechas de tipo date a cadenas de texto
-        nuevo_datos['fecha_inicio'] = fecha_inicio.strftime("%Y-%m-%d")
-        nuevo_datos['fecha_finalizacion'] = fecha_finalizacion.strftime("%Y-%m-%d")
-        nuevo_datos['estado'] = "pendiente"  # Estado por defecto
-
-        if solicitudesCrudServer.agregar_solicitud(usuario, nuevo_datos):
-            st.success("Solicitud agregada con éxito.")
+        if (
+            nuevo_datos['nombre_completo_colaborador']
+            and nuevo_datos['departamento']
+            and nuevo_datos['motivo']
+            and nuevo_datos['pais_destino']
+            and nuevo_datos['alojamiento']
+            and nuevo_datos['vuelos'][0]['aerolinea']  # Verifica al menos un vuelo
+            and nuevo_datos['vuelos'][0]['precio_boletos'] > 0  # Validación para precio de boletos positivo
+        ):
+            # Validación de fechas
+            if fecha_inicio < fecha_finalizacion:
+                # Convierte las fechas de tipo date a cadenas de texto
+                nuevo_datos['fecha_inicio'] = fecha_inicio.strftime("%Y-%m-%d")
+                nuevo_datos['fecha_finalizacion'] = fecha_finalizacion.strftime("%Y-%m-%d")
+                nuevo_datos['estado'] = "pendiente"  # Estado en minúsculas
+                
+                if solicitudesCrudServer.agregar_solicitud(nuevo_datos):
+                    st.success("Solicitud agregada con éxito.")
+                else:
+                    st.error("No se pudo agregar la solicitud.")
+            else:
+                st.warning("La 'Fecha de Inicio' debe ser anterior a la 'Fecha de Finalización'.")
         else:
-            st.error("No se pudo agregar la solicitud.")
+            st.warning("Por favor, completa todos los campos obligatorios y asegúrate de que los datos sean válidos.")
+
+
+
+
+
 
 
 

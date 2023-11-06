@@ -47,10 +47,8 @@ def colaborador_page(usuario):
     if selected=="Registro de una solicitud de viaje":
         crudSolicitudes.agregar_solicitudUI(usuario)
     if selected=="Modificar una solicitud":
-        st.write("Has seleccionado Funcionalidad 2. ¡Realiza las acciones correspondientes aquí!")
         crudSolicitudes.editar_solicitud(usuario)
     if selected=="Eliminar una solicitud":
-         st.write("Has seleccionado Funcionalidad 2. ¡Realiza las acciones correspondientes aquí!")
          crudSolicitudes.eliminarSolicitud(usuario)
     if selected=="Ver historial de solicitudes":
         crudSolicitudes.mostrar_solicitudes(usuario)
