@@ -3,7 +3,7 @@ import math
 
 # Configurar la conexión a CouchDB
 def conectar_a_couchdb():
-    server = couchdb.Server('http://admin:admin@localhost:5984/')
+    server = couchdb.Server('http://admin:ariel@localhost:5984/')
     return server['viajes_corporativos']
 
 # Función para registrar un colaborador
@@ -151,31 +151,17 @@ def viajes_internacionales(trimestre, año):
 
 def solicitudes_colaborador(correoColaborador):
     db = conectar_a_couchdb()
-    colaboradores_doc = db.get("colaboradores")
-    nombreColaborador = None
+    db_solicitudes = db.get("solicitudes")
 
-    if colaboradores_doc:
-        colaboradores_lista = colaboradores_doc.get("colaboradores", [])
+    if db_solicitudes:
+        solicitudes_registradas = db_solicitudes.get("solicitudes", [])
+        listaSolicitudes = []
 
-        for colaborador in colaboradores_lista:
-            if correoColaborador == colaborador.get("correo_electronico"):
-                nombreColaborador = colaborador.get("nombre", None)
-                break
-
-    if nombreColaborador is not None:
-        db_solicitudes = db.get("solicitudes")
-
-        if db_solicitudes:
-            solicitudes_registradas = db_solicitudes.get("solicitudes", [])
-            listaSolicitudes = []
-
-            for solicitud in solicitudes_registradas:
-                if nombreColaborador == solicitud.get("nombre_completo_colaborador"):
-                    listaSolicitudes.append(solicitud)
+        for solicitud in solicitudes_registradas:
+            if correoColaborador == solicitud.get("correo"):
+                listaSolicitudes.append(solicitud)
             
-            return listaSolicitudes
-        else:
-            return []
+        return listaSolicitudes
     else:
         return []
 

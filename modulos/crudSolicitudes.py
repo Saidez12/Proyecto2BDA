@@ -72,6 +72,8 @@ def mostrar_solicitudes(usuario):
             st.write(f"Fecha de finalización: {solicitud['fecha_finalizacion']}")
             st.write(f"Alojamiento: {solicitud['alojamiento']}")
             st.write(f"Estado: {solicitud['estado']}")
+            st.write(f"Requiere transporte: {solicitud['requiere_transporte']}")
+            st.write(f"Es internacioal: {solicitud['internacional']}")
             st.write("---")
 
 # Función para editar una solicitud
