@@ -101,3 +101,21 @@ def cambiar_estadoSolicitud(id_solicitud):
 
     return False  # No se encontró la solicitud o no tiene permiso para actualizarla
 
+def rechazar_estadoSolicitud(id_solicitud):
+    db = conexionbd.conectar_a_couchdb()
+    solicitudes = db.get("solicitudes")  # Obtén el documento de solicitudes
+
+    if solicitudes:
+        solicitudes_registradas = solicitudes.get('solicitudes', [])
+
+        for solicitud in solicitudes_registradas:
+            if solicitud.get('identificador') == id_solicitud:
+                # Actualiza el estado de la solicitud a "aceptada"
+                solicitud['estado'] = "rechazada"
+
+                # Actualiza la solicitud en la lista
+                db['solicitudes'] = solicitudes
+                return True
+
+    return False  # No se encontró la solicitud o no tiene permiso para actualizarla
+

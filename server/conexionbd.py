@@ -4,7 +4,7 @@ import math
 # Configurar la conexión a CouchDB
 def conectar_a_couchdb():
     server = couchdb.Server('http://admin:ariel@localhost:5984/')
-    return server['viajes_corporativos']
+    return server['viajescorporativos_nodo3']
 
 # Función para registrar un colaborador
 def registrar_colaborador(correo, contrasena):
@@ -107,45 +107,35 @@ def consultar_viajes_por_destino(destino):
         return []
 
 def viajes_internacionales(trimestre, año):
-    db = conectar_a_couchdb()
-    solicitudes = db.get("solicitudes")  
+    db = conectar_a_couchdb()  # Asegúrate de definir esta función correctamente
 
-    if solicitudes:
-        viajes_internacionales = solicitudes.get('solicitudes', [])
-        viajes_filtrados = []
+    if db is not None:
+        solicitudes = db.get("solicitudes")
 
-        for viaje in viajes_internacionales:
-            fecha_inicio = viaje.get('fecha_inicio')
-           
-            fecha_inicio = datetime.datetime.strptime(fecha_inicio, "%Y-%m-%d")
-            
+        if solicitudes:
+            viajes_internacionales = solicitudes.get('solicitudes', [])
+            viajes_filtrados = []
 
-            # Obtenemos el mes de la fecha.
-            mes = fecha_inicio.month
+            for viaje in viajes_internacionales:
+                fecha_inicio = viaje.get('fecha_inicio')
 
-            # Calculamos el trimestre.
-            trimestre_viaje = mes // 3
+                fecha_inicio = datetime.datetime.strptime(fecha_inicio, "%Y-%m-%d")
 
-            # Si el mes es enero o febrero, el trimestre es el anterior.
-            if mes <= 2:
-                trimestre_viaje -= 1
-            año_viaje = fecha_inicio.year
-            print (año_viaje)
-            print (año)
-            print (trimestre_viaje)
-            print (trimestre)
-            print (viaje.get('internacional'))
-            trimestre_viaje = int(trimestre_viaje)
-            trimestre = int(trimestre)
+                # Obtenemos el mes de la fecha.
+                mes = fecha_inicio.month
 
-            if trimestre_viaje == trimestre and año_viaje == año and viaje.get('internacional') == True:
-                print ("SIII")
-                viajes_filtrados.append({
-                    'nombre_completo_colaborador': viaje['nombre_completo_colaborador'],
-                    'pais_destino': viaje['pais_destino']
-                })
+                # Calculamos el trimestre.
+                trimestre_viaje = int((mes - 1) // 3 + 1)
+                año_viaje = fecha_inicio.year
+                if trimestre_viaje == int(trimestre) and año_viaje == año and viaje.get('internacional') == True:
+                    viajes_filtrados.append({
+                        'nombre_completo_colaborador': viaje['nombre_completo_colaborador'],
+                        'pais_destino': viaje['pais_destino']
+                    })
 
-        return viajes_filtrados
+            return viajes_filtrados
+        else:
+            return []
     else:
         return []
 

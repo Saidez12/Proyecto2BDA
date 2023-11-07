@@ -34,11 +34,17 @@ def cambiar_estadoSolicitud():
         if solicitud['identificador'] == idSeleccionado:
             solicitud_seleccionada = solicitud
     if solicitud_seleccionada:
-        actualizar_button = st.button("Cambiar estado")
+        actualizar_button = st.button("Aprobar")
+        rechazar_buton=st.button("Rechazar")
         if actualizar_button:
             if solicitudesCrudServer.cambiar_estadoSolicitud( idSeleccionado):
-                st.success("Estado de solicitud actualizado con éxito.")
+                st.success("Solicitud aprobada con éxito.")
             else:
                 st.error("No se pudo actualizar el estado de la solicitud.")
+        if rechazar_buton:
+            if solicitudesCrudServer.rechazar_estadoSolicitud( idSeleccionado):
+                st.success("Solicitud rechazada con éxito.")
+            else:
+                st.error("No se pudo rechazar la solicitud.")
     else:
         st.warning("Selecciona un ID válido de solicitud")
